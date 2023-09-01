@@ -1,4 +1,4 @@
-class Utils {
+class Util {
     /**
      * Check if a value is a string
      *
@@ -184,4 +184,4 @@ class Utils {
     }
 }
 
-module.exports = Utils
+module.exports = Util

@@ -1,0 +1,23 @@
+{
+  "name": "utility",
+  "version": "1.0.0",
+  "description": "Utitlity class for everyday programming operations",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adedayomatt/utility.git"
+  },
+  "keywords": [
+    "utility",
+    "coding"
+  ],
+  "author": "Adedayo Matthews",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/adedayomatt/utility/issues"
+  },
+  "homepage": "https://github.com/adedayomatt/utility#readme"
+}

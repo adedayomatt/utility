@@ -1,5 +1,5 @@
 {
-  "name": "utility",
+  "name": "@adedayomatthews/utility",
   "version": "1.0.0",
   "description": "Utility class for everyday programming operations",
   "main": "index.js",
@@ -12,6 +12,7 @@
   },
   "keywords": [
     "utility",
+    "helpers",
     "coding"
   ],
   "author": "Adedayo Matthews",

@@ -216,27 +216,27 @@ class Util {
          * @returns 
          */
         static _maskedString(str, div, maxDiv){
-        if (div > 0) return str;
+            if(div <= 0) return str;
             let strLength = Math.floor(str.length/div)
             let strStorage = [];
             let chunk;
             for(i = 0; i <str.length; i += strLength){
-              const arrChunkSize = strLength + i
-              chunk = str.substring(i, arrChunkSize)
-              if(chunk.length == strLength){
-                if(chunk.length > maxDiv){
-                 chunk = chunk.substring(0, maxDiv)
+                const arrChunkSize = strLength + i
+                chunk = str.substring(i, arrChunkSize)
+                if(chunk.length == strLength){
+                    if(chunk.length > maxDiv){
+                        chunk = chunk.substring(0, maxDiv);
+                        let diff = strLength - chunk.length
+                        if (diff > 0){
+                            for (let i = 0; i < diff; i++) {
+                                chunk += '*';
+                            }
+                        }
+                        strStorage.push(chunk)
+                    }
                 }
-              let diff = strLength - chunk.length
-            if (diff > 0) {
-              for (let i = 0; i < diff; i++) {
-                chunk += '*';
+                return strStorage.join('')
             }
-        }
-              strStorage.push(chunk)
-            }
-          }
-            return strStorage.join('')
         }
     }
 

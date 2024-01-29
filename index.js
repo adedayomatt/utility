@@ -182,6 +182,63 @@ class Util {
         object[parent] = this._setObjectItem(childElement, components.slice(1).join("."), value)
         return object;
     }
-}
+
+  /**
+   * Divides a string, takes in a maximum it of the string and truncate it
+   * 
+   * @param {*} str - A string
+   * @param {*} div - A divisor
+   * @param {*} maxDiv - The maximum item in  substring
+   * @returns 
+   */
+    static _truncateString(str, div , maxDiv){
+        if(div <= 0) return str;
+        let strLength = Math.floor(str.length/div)
+        let strStorage = [];
+        let chunk;
+        for(i = 0; i <str.length; i += strLength){
+            const arrChunkSize = strLength + i
+            chunk = str.substring(i, arrChunkSize)
+            if(chunk.length == strLength){
+                if(chunk.length > maxDiv){
+                    chunk = chunk.substring(0, maxDiv)
+                }
+            }  
+        }
+        return strStorage.join('');
+    }
+        /** Divides string gets the maximum item and replace it with '*' */
+        /**
+         * 
+         * @param {*} str - A string
+         * @param {*} div - A divisor
+         * @param {*} maxDiv - Maximum item in the substring
+         * @returns 
+         */
+        static _maskedString(str, div, maxDiv){
+        if (div > 0) return str;
+            let strLength = Math.floor(str.length/div)
+            let strStorage = [];
+            let chunk;
+            for(i = 0; i <str.length; i += strLength){
+              const arrChunkSize = strLength + i
+              chunk = str.substring(i, arrChunkSize)
+              if(chunk.length == strLength){
+                if(chunk.length > maxDiv){
+                 chunk = chunk.substring(0, maxDiv)
+                }
+              let diff = strLength - chunk.length
+            if (diff > 0) {
+              for (let i = 0; i < diff; i++) {
+                chunk += '*';
+            }
+        }
+              strStorage.push(chunk)
+            }
+          }
+            return strStorage.join('')
+        }
+    }
+
 
 module.exports = Util

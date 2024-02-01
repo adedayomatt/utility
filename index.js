@@ -290,10 +290,10 @@ class Util {
      */
     static _encryptData(data = {}, { method, key, iv }) {
         return new Encryption({ method, key, iv })
-            .encrypt({
+            .encrypt(JSON.stringify({
             ...data,
             Timestamp: new Date()
-        })
+        }))
     }
 
     /**

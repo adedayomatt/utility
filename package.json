@@ -1,6 +1,6 @@
 {
   "name": "@adedayomatthews/utility",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Utility class for everyday programming operations",
   "main": "index.js",
   "scripts": {

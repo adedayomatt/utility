@@ -1,4 +1,5 @@
 const InvalidJsonException = require("./exceptions/InvalidJsonException");
+const Encryption = require("./services/Encryption");
 
 class Util {
     /**
@@ -275,6 +276,39 @@ class Util {
             }`;
         }
         return str;
+    }
+
+    /**
+     * Encrypt data with given key and initialization vector
+     *
+     * @param data
+     * @param method
+     * @param key
+     * @param iv
+     * @returns {*|string}
+     * @private
+     */
+    static _encryptData(data = {}, { method, key, iv }) {
+        return new Encryption({ method, key, iv })
+            .encrypt({
+            ...data,
+            Timestamp: new Date()
+        })
+    }
+
+    /**
+     * Encrypt data with given key and initialization vector
+     *
+     * @param encryption
+     * @param method
+     * @param key
+     * @param iv
+     * @returns {*}
+     * @private
+     */
+    static _decryptData(encryption = "", { method, key, iv }) {
+        return new Encryption({ method, key, iv })
+            .decrypt(encryption)
     }
 }
 

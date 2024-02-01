@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/adedayomatt/utility/issues"
   },
-  "homepage": "https://github.com/adedayomatt/utility#readme"
+  "homepage": "https://github.com/adedayomatt/utility#readme",
+  "dependencies": {
+    "crypto": "^1.0.1"
+  }
 }

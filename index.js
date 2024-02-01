@@ -1,3 +1,5 @@
+const InvalidJsonException = require("./exceptions/InvalidJsonException");
+
 class Util {
     /**
      * Check if a value is a string
@@ -29,6 +31,7 @@ class Util {
         const validMatch = string.match(/\{.*\}/);
         return validMatch ? JSON.parse(validMatch[0]) : {};
     }
+
     /**
      * Check if a value is an array
      *
@@ -84,7 +87,7 @@ class Util {
      * @returns {*}
      */
     static _set(caller, properties = {}) {
-        for(let key in properties) {
+        for (let key in properties) {
             caller[key] = properties[key]
         }
         return caller;
@@ -127,6 +130,7 @@ class Util {
     static _capitalizeFirstLetter(string = "") {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
+
     /**
      * Go through each item of an object and apply a callback
      *
@@ -136,12 +140,13 @@ class Util {
      * @param {string} address
      * @returns {{}|*}
      */
-    static _crawlObject(object = {}, callback = (item, key, address) => {}, key = null, address = null) {
-        if(!this._isObject(object)){
+    static _crawlObject(object = {}, callback = (item, key, address) => {
+    }, key = null, address = null) {
+        if (!this._isObject(object)) {
             return callback(object, key, address);
         }
-        for(let key in object) {
-            object[key] = this._crawlObject(object[key], callback, key,address ? address+"."+key : key)
+        for (let key in object) {
+            object[key] = this._crawlObject(object[key], callback, key, address ? address + "." + key : key)
         }
         return object;
     }
@@ -156,7 +161,7 @@ class Util {
      */
     static _getObjectItem(object = {}, address = "", defaultValue = null) {
         const components = address.split(".");
-        if(components.length === 1) {
+        if (components.length === 1) {
             let component = components[0];
             let value = object[component];
             return value || defaultValue;
@@ -174,8 +179,8 @@ class Util {
      */
     static _setObjectItem(object = {}, address = "", value = null) {
         const components = address.split(".");
-        if(components.length === 1) {
-            return { ...object || {}, [components[0]]: value }
+        if (components.length === 1) {
+            return {...object || {}, [components[0]]: value}
         }
         const parent = components[0];
         let childElement = this._isObject(object[parent]) ? object[parent] : {}
@@ -183,62 +188,95 @@ class Util {
         return object;
     }
 
-  /**
-   * Divides a string, takes in a maximum it of the string and truncate it
-   * 
-   * @param {*} str - A string
-   * @param {*} div - A divisor
-   * @param {*} maxDiv - The maximum item in  substring
-   * @returns 
-   */
-    static _truncateString(str, div , maxDiv){
-        if(div <= 0) return str;
-        let strLength = Math.floor(str.length/div)
-        let strStorage = [];
-        let chunk;
-        for(i = 0; i <str.length; i += strLength){
-            const arrChunkSize = strLength + i
-            chunk = str.substring(i, arrChunkSize)
-            if(chunk.length == strLength){
-                if(chunk.length > maxDiv){
-                    chunk = chunk.substring(0, maxDiv)
-                }
-            }  
+    /**
+     * Divide string into blocks
+     *
+     * @param str
+     * @param division
+     * @returns {*[]}
+     * @private
+     */
+    static _divideString(str, division = 1) {
+        const blockLength = str.length > 1 ? Math.floor(str.length / division) : 1;
+        const blocks = [];
+        for (let i = 0; i < str.length; i += blockLength) {
+            blocks.push(str.slice(i, i + blockLength))
         }
-        return strStorage.join('');
+        return blocks;
     }
-        /** Divides string gets the maximum item and replace it with '*' */
-        /**
-         * 
-         * @param {*} str - A string
-         * @param {*} div - A divisor
-         * @param {*} maxDiv - Maximum item in the substring
-         * @returns 
-         */
-        static _maskedString(str, div, maxDiv){
-            if(div <= 0) return str;
-            let strLength = Math.floor(str.length/div)
-            let strStorage = [];
-            let chunk;
-            for(i = 0; i <str.length; i += strLength){
-                const arrChunkSize = strLength + i
-                chunk = str.substring(i, arrChunkSize)
-                if(chunk.length == strLength){
-                    if(chunk.length > maxDiv){
-                        chunk = chunk.substring(0, maxDiv);
-                        let diff = strLength - chunk.length
-                        if (diff > 0){
-                            for (let i = 0; i < diff; i++) {
-                                chunk += '*';
-                            }
-                        }
-                        strStorage.push(chunk)
-                    }
-                }
-                return strStorage.join('')
-            }
+
+    /**
+     * Truncate string
+     *
+     * @param str
+     * @param maxLength
+     * @param division
+     * @param ellipsis
+     * @returns {string}
+     * @private
+     */
+    static _truncateString(str = '', maxLength = 2, division = 1, ellipsis = '...') {
+        if(division * maxLength >= str.length) return str;
+        return this._divideString(str, division)
+            .map((block, i) => block.slice(0, maxLength) + ellipsis)
+            .join("");
+    }
+
+    /**
+     *
+     * Mask characters in a string
+     *
+     * @param str
+     * @param maxLength
+     * @param division
+     * @param mask
+     * @returns {string}
+     * @private
+     */
+    static _maskString(str = '', maxLength = 2, division = 1, mask = '*') {
+        if(division * maxLength >= str.length) return str;
+        return this._divideString(str, division)
+            .map((block, i) => block.slice(0, maxLength) + block.slice(maxLength).replaceAll(/./g, mask))
+            .join("")
+    }
+
+    /**
+     * Get json value of a string
+     *
+     * @param json
+     * @param throwException
+     * @returns {*|{}}
+     * @private
+     */
+    static _getJson = (json, throwException = true) => {
+        if (typeof json === "object") return json;
+        try {
+            return this._getJson(JSON.parse(json))
+        } catch (e) {
+            if (throwException) throw new InvalidJsonException(json)
+            else return {}
         }
     }
+
+    /**
+     * Get a string identifier for an object
+     *
+     * @param object
+     * @returns {string}
+     * @private
+     */
+    static _getObjectIdentifier(object = {}) {
+        let str = '';
+        for (const key in object) {
+            str += `:${key}:${
+                typeof object[key] === 'object'
+                    ? this._getObjectIdentifier(object[key])
+                    : object[key]
+            }`;
+        }
+        return str;
+    }
+}
 
 
 module.exports = Util

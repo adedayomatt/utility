@@ -291,7 +291,7 @@ class Util {
     static _encryptData(data = {}, { method, key, iv }) {
         return new Encryption({ method, key, iv })
             .encrypt(JSON.stringify({
-            ...data,
+            data,
             Timestamp: new Date()
         }))
     }
